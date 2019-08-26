@@ -1,4 +1,4 @@
-import {getRandomBoolean, getRandomNumberInRange, getRandomItemFrom} from "./utils";
+import {getRandomBoolean, getRandomNumberInRange, getRandomItemFrom} from "../utils";
 const MIN_YEAR = 1929;
 const MAX_YEAR = 2019;
 
@@ -56,6 +56,48 @@ const genre = [
   `Dramma`,
   `Thriler`
 ];
+const directors = [
+  `David Lynch`,
+  `Martin Scorsese`,
+  `Steven Soderbergh`,
+  `Terrence Malick`,
+  `Abbas Kiarostami`
+];
+const writers = [
+  `Errol Morris`,
+  `Hayao Miyazaki`,
+  `David Cronenberg`,
+  `Terence Davies`,
+  `Lukas Moodysson`,
+];
+const actors = [
+  `Robert De Niro`,
+  `Jack Nicholson`,
+  `Marlon Brando`,
+  ` Tom Hanks`,
+  `Leonardo DiCaprio`
+];
+const countries = [
+  `USA`,
+  `Russia`,
+  `Greece`,
+  `France`,
+  `Spain`
+];
+const comments = [
+  `Interesting setting and a good cast`,
+  `Booooooooooring`,
+  `Very very old. Meh`,
+  `Almost two hours? Seriously?`
+];
+const authorOfComm = [
+  `Tim Macoveev`,
+  `John Doe`,
+  `Alexia Holte`,
+  `Christene Guyton`,
+  `Stefan Lauderback`
+];
+
 const getRandomDescription = (descrInsert) => {
   let j;
   let temp;
@@ -74,11 +116,17 @@ export const getFilmCard = () => ({
   genre: getRandomItemFrom(genre),
   rating: getRandomNumberInRange(MIN_RATING, MAX_RATING),
   year: getRandomNumberInRange(MIN_YEAR, MAX_YEAR),
-  comments: getRandomNumberInRange(MIN_NUM_OF_COMMENTS, MAX_NUM_OF_COMMENTS),
+  numOfComments: getRandomNumberInRange(MIN_NUM_OF_COMMENTS, MAX_NUM_OF_COMMENTS),
   isInWatchList: getRandomBoolean(),
   isWatched: getRandomBoolean(),
   isFavorite: getRandomBoolean(),
-  durationMin: getRandomNumberInRange(MIN_DURATION_MINUTES, MAX_DURATION_MINUTES)
+  durationMin: getRandomNumberInRange(MIN_DURATION_MINUTES, MAX_DURATION_MINUTES),
+  director: getRandomItemFrom(directors),
+  writer: getRandomNumberInRange(1, 3),
+  actor: getRandomNumberInRange(1, 3),
+  country: getRandomItemFrom(countries),
+  comment: getRandomItemFrom(comments),
+  authorOfComment: getRandomItemFrom(authorOfComm)
 });
 export const getCards = (amoutOfCards) => {
   return new Array(amoutOfCards).fill(``).map(getFilmCard);
