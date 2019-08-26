@@ -122,8 +122,8 @@ export const getFilmCard = () => ({
   isFavorite: getRandomBoolean(),
   durationMin: getRandomNumberInRange(MIN_DURATION_MINUTES, MAX_DURATION_MINUTES),
   director: getRandomItemFrom(directors),
-  writer: getRandomNumberInRange(1, 3),
-  actor: getRandomNumberInRange(1, 3),
+  writer: new Set(getRandomDescription(writers)),
+  actor: new Set(getRandomDescription(actors)),
   country: getRandomItemFrom(countries),
   comment: getRandomItemFrom(comments),
   authorOfComment: getRandomItemFrom(authorOfComm)

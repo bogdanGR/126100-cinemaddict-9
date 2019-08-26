@@ -28,18 +28,17 @@ const renderComponent = (container, element, place) => {
       break;
   }
 };
-const removeElement = (elem) => {
-  elem = null;
-};
+// const removeElement = (elem) => {
+//   elem = null;
+// };
 
 const unRenderComponent = (element) => {
   if (element) {
     element.remove();
-    removeElement(element);
   }
 };
 const isDeactivateEvent = (evt) => {
   const ESC_KEYCODE = 27;
   return evt.keyCode && evt.keyCode === ESC_KEYCODE;
 };
-export {getRandomBoolean, getRandomItemFrom, getRandomNumberInRange, renderComponent, createElement, unRenderComponent, removeElement, isDeactivateEvent};
+export {getRandomBoolean, getRandomItemFrom, getRandomNumberInRange, renderComponent, createElement, unRenderComponent, isDeactivateEvent};

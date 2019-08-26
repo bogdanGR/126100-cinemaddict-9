@@ -67,7 +67,7 @@ const renderCards = (container, cardsTpl) => {
   cardDetails.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, closeNodeHandler);
 
   renderComponent(container, card.getElement(), `beforeend`);
-}
+};
 cardsMocks.forEach((cardTpl) => renderCards(filmContainer, cardTpl));
 
 
