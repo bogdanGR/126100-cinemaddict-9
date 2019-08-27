@@ -47,7 +47,6 @@ const cardToMostComm = new Array(2).fill(``).map(getFilmCard);
 const renderCards = (container, cardsTpl) => {
   const card = new Card(cardsTpl);
   const cardDetails = new Popup(cardsTpl);
-
   const closeByEscHandler = (evt) => {
     if (isDeactivateEvent(evt)) {
       container.replaceChild(card.getElement(), cardDetails.getElement());
@@ -86,18 +85,9 @@ let cardsOnPage = MAX_RENDER_CARDS;
 let leftCardToRender = CARDS.length - cardsOnPage;
 const loadMoreButton = mainSite.querySelector(`.films-list__show-more`);
 
-const getFilmCards = (cards) => {
-  return cards.map((cardData) => {
-    const card = new Card(cardData);
-    return card.getElement();
-  });
-};
-
 const renderLeftCards = () => {
-  const myCards = getFilmCards(CARDS.slice(cardsOnPage, (cardsOnPage + MAX_RENDER_CARDS)));
-  for (let i = 0; i < myCards.length; i++) {
-    renderComponent(filmContainer, myCards[i], `beforeend`);
-  }
+  const cardsMocksMore = new Array(MAX_RENDER_CARDS).fill(``).map(getFilmCard);
+  cardsMocksMore.forEach((cardTpl) => renderCards(filmContainer, cardTpl));
   cardsOnPage += MAX_RENDER_CARDS;
   leftCardToRender = CARDS.length - cardsOnPage;
 

@@ -1,21 +1,23 @@
 import {createElement} from "../utils";
 export class Popup {
-  constructor({title, poster, descriptions, genre, rating, year, numOfComments, isInWatchList, isWatched, isFavorite, durationMin, director, country, comment, authorOfComment}) {
+  constructor({title, poster, descriptions, genre, rating, year, isInWatchList, isWatched, isFavorite, durationMin, director, country, comment, authorOfComment, writer, actor, ageRestriction}) {
     this._title = title;
     this._poster = poster;
     this._descriptions = descriptions;
     this._genre = genre;
     this._rating = rating;
     this._year = year;
-    this._numOfComments = numOfComments;
     this._isInWatchList = isInWatchList;
     this._isWatched = isWatched;
     this._isFavorite = isFavorite;
     this._durationMin = durationMin;
     this._director = director;
+    this._writer = writer;
+    this._actor = actor;
     this._country = country;
     this._comment = comment;
     this._authorOfComment = authorOfComment;
+    this._ageRestiction = ageRestriction;
     this._element = null;
   }
   getElement() {
@@ -24,6 +26,9 @@ export class Popup {
     }
 
     return this._element;
+  }
+  removeElement() {
+    this._element = null;
   }
   getTemplate() {
     return `
@@ -37,7 +42,7 @@ export class Popup {
         <div class="film-details__poster">
           <img class="film-details__poster-img" src="./images/posters/${this._poster}" alt="">
 
-          <p class="film-details__age">18+</p>
+          <p class="film-details__age">${this._ageRestiction}+</p>
         </div>
 
         <div class="film-details__info">
@@ -58,12 +63,12 @@ export class Popup {
               <td class="film-details__cell">${this._director}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">Writers</td>
-              <td class="film-details__cell">Anne Wigton, Heinz Herald, Richard Weil</td>
+              <td class="film-details__term">${this._writer.size > 1 ? `Writers` : `Writer`}</td>
+              <td class="film-details__cell">${Array.from(this._writer).map((writerItem) => writerItem).join(`, `)}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">Actors</td>
-              <td class="film-details__cell">Erich von Stroheim, Mary Beth Hughes, Dan Duryea</td>
+              <td class="film-details__term">${this._actor.size > 1 ? `Actors` : `Actor`}</td>
+              <td class="film-details__cell">${Array.from(this._actor).map((actorItem) => actorItem).join(`, `)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
@@ -78,11 +83,14 @@ export class Popup {
               <td class="film-details__cell">${this._country}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">Genres</td>
+              <td class="film-details__term">${this._genre.size > 1 ? `Genres` : `Genre`}</td>
               <td class="film-details__cell">
-                <span class="film-details__genre">Drama</span>
-                <span class="film-details__genre">Film-Noir</span>
-                <span class="film-details__genre">Mystery</span></td>
+                 ${Array.from(this._genre).map((genre) => `
+                    <span class="film-details__genre">
+                     ${genre}
+                    </span>
+                  `).join(``)}
+                 </td>
             </tr>
           </table>
 
@@ -104,61 +112,24 @@ export class Popup {
 
     <div class="form-details__bottom-container">
       <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._numOfComments}</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._comment.size}</span></h3>
 
         <ul class="film-details__comments-list">
-          <li class="film-details__comment">
-            <span class="film-details__comment-emoji">
-              <img src="./images/emoji/smile.png" width="55" height="55" alt="emoji">
-            </span>
-            <div>
-              <p class="film-details__comment-text">Interesting setting and a good cast</p>
-              <p class="film-details__comment-info">
-                <span class="film-details__comment-author">Tim Macoveev</span>
-                <span class="film-details__comment-day">3 days ago</span>
-                <button class="film-details__comment-delete">Delete</button>
-              </p>
-            </div>
-          </li>
-          <li class="film-details__comment">
-            <span class="film-details__comment-emoji">
-              <img src="./images/emoji/sleeping.png" width="55" height="55" alt="emoji">
-            </span>
-            <div>
-              <p class="film-details__comment-text">Booooooooooring</p>
-              <p class="film-details__comment-info">
-                <span class="film-details__comment-author">John Doe</span>
-                <span class="film-details__comment-day">2 days ago</span>
-                <button class="film-details__comment-delete">Delete</button>
-              </p>
-            </div>
-          </li>
-          <li class="film-details__comment">
-            <span class="film-details__comment-emoji">
-              <img src="./images/emoji/puke.png" width="55" height="55" alt="emoji">
-            </span>
-            <div>
-              <p class="film-details__comment-text">Very very old. Meh</p>
-              <p class="film-details__comment-info">
-                <span class="film-details__comment-author">John Doe</span>
-                <span class="film-details__comment-day">2 days ago</span>
-                <button class="film-details__comment-delete">Delete</button>
-              </p>
-            </div>
-          </li>
-          <li class="film-details__comment">
-            <span class="film-details__comment-emoji">
-              <img src="./images/emoji/angry.png" width="55" height="55" alt="emoji">
-            </span>
-            <div>
-              <p class="film-details__comment-text">Almost two hours? Seriously?</p>
-              <p class="film-details__comment-info">
-                <span class="film-details__comment-author">John Doe</span>
-                <span class="film-details__comment-day">Today</span>
-                <button class="film-details__comment-delete">Delete</button>
-              </p>
-            </div>
-          </li>
+          ${Array.from(this._comment).map((item) => `
+            <li class="film-details__comment">
+              <span class="film-details__comment-emoji">
+                <img src="${item.img}" width="55" height="55" alt="emoji">
+              </span>
+              <div>
+                <p class="film-details__comment-text">${item.text}</p>
+                <p class="film-details__comment-info">
+                  <span class="film-details__comment-author">${item.author}</span>
+                  <span class="film-details__comment-day">${item.date} days ago</span>
+                  <button class="film-details__comment-delete">Delete</button>
+                </p>
+              </div>
+            </li>
+          `).join(``)}
         </ul>
 
         <div class="film-details__new-comment">

@@ -1,17 +1,15 @@
-import {getRandomBoolean, getRandomNumberInRange, getRandomItemFrom} from "../utils";
+import {getRandomBoolean, getRandomNumberInRange, getRandomItemFrom, getRandomArray} from "../utils";
 const MIN_YEAR = 1929;
 const MAX_YEAR = 2019;
 
 const MIN_RATING = 1;
 const MAX_RATING = 10;
-const MIN_NUM_OF_COMMENTS = 0;
-const MAX_NUM_OF_COMMENTS = 200;
 
 const MIN_DURATION_MINUTES = 10;
 const MAX_DURATION_MINUTES = 59;
 
-const MIN_NUM_OF_DESCR = 1;
-const MAX_NUM_OF_DESCR = 3;
+const MIN_NUM_OF_ITEMS = 1;
+const MAX_NUM_OF_ITEMS = 3;
 
 const filmsTitles = [
   `Greta`,
@@ -84,49 +82,62 @@ const countries = [
   `France`,
   `Spain`
 ];
-const comments = [
-  `Interesting setting and a good cast`,
-  `Booooooooooring`,
-  `Very very old. Meh`,
-  `Almost two hours? Seriously?`
+const filmComments = [
+  {
+    img: `images/emoji/smile.png`,
+    text: `Interesting setting and a good cast`,
+    author: `Tim Macoveev`,
+    date: 1
+  },
+  {
+    img: `images/emoji/sleeping.png`,
+    text: `Booooooooooring`,
+    author: `John Doe`,
+    date: 2
+  },
+  {
+    img: `images/emoji/puke.png`,
+    text: `Almost two hours? Seriously?`,
+    author: `John Doe`,
+    date: 4
+  }
 ];
-const authorOfComm = [
-  `Tim Macoveev`,
-  `John Doe`,
-  `Alexia Holte`,
-  `Christene Guyton`,
-  `Stefan Lauderback`
+const ageRestrictions = [
+  8,
+  12,
+  14,
+  16,
+  18
 ];
 
-const getRandomDescription = (descrInsert) => {
+const getRandomItems = (dataInsert) => {
   let j;
   let temp;
-  for (let i = descrInsert.length - 1; i > 0; i--) {
+  for (let i = dataInsert.length - 1; i > 0; i--) {
     j = Math.floor(Math.random() * (i + 1));
-    temp = descrInsert[j];
-    descrInsert[j] = descrInsert[i];
-    descrInsert[i] = temp;
+    temp = dataInsert[j];
+    dataInsert[j] = dataInsert[i];
+    dataInsert[i] = temp;
   }
-  return descrInsert.slice(0, getRandomNumberInRange(MIN_NUM_OF_DESCR, MAX_NUM_OF_DESCR));
+  return dataInsert.slice(0, getRandomNumberInRange(MIN_NUM_OF_ITEMS, MAX_NUM_OF_ITEMS));
 };
 export const getFilmCard = () => ({
   title: getRandomItemFrom(filmsTitles),
   poster: getRandomItemFrom(posters),
-  descriptions: new Set(getRandomDescription(descriptionArr)),
-  genre: getRandomItemFrom(genre),
+  descriptions: new Set(getRandomItems(descriptionArr)),
+  genre: new Set(getRandomItems(genre)),
   rating: getRandomNumberInRange(MIN_RATING, MAX_RATING),
   year: getRandomNumberInRange(MIN_YEAR, MAX_YEAR),
-  numOfComments: getRandomNumberInRange(MIN_NUM_OF_COMMENTS, MAX_NUM_OF_COMMENTS),
   isInWatchList: getRandomBoolean(),
   isWatched: getRandomBoolean(),
   isFavorite: getRandomBoolean(),
   durationMin: getRandomNumberInRange(MIN_DURATION_MINUTES, MAX_DURATION_MINUTES),
   director: getRandomItemFrom(directors),
-  writer: new Set(getRandomDescription(writers)),
-  actor: new Set(getRandomDescription(actors)),
+  writer: new Set(getRandomItems(writers)),
+  actor: new Set(getRandomItems(actors)),
   country: getRandomItemFrom(countries),
-  comment: getRandomItemFrom(comments),
-  authorOfComment: getRandomItemFrom(authorOfComm)
+  comment: new Set(getRandomArray(getRandomNumberInRange(MIN_NUM_OF_ITEMS, MAX_NUM_OF_ITEMS), filmComments)),
+  ageRestriction: getRandomItemFrom(ageRestrictions)
 });
 export const getCards = (amoutOfCards) => {
   return new Array(amoutOfCards).fill(``).map(getFilmCard);

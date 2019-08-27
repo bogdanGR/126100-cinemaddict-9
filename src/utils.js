@@ -1,6 +1,11 @@
 const getRandomItemFrom = (array) => {
   return array[Math.floor(Math.random() * array.length)];
 };
+const getRandomArray = (lengthOfItems, array) => {
+  let arrayNew = [];
+  new Array(lengthOfItems).fill(``).forEach(() => arrayNew.push(array[Math.floor(Math.random() * array.length)]));
+  return arrayNew;
+};
 const getRandomBoolean = () => {
   return Boolean(Math.round(Math.random()));
 };
@@ -28,9 +33,6 @@ const renderComponent = (container, element, place) => {
       break;
   }
 };
-// const removeElement = (elem) => {
-//   elem = null;
-// };
 
 const unRenderComponent = (element) => {
   if (element) {
@@ -41,4 +43,4 @@ const isDeactivateEvent = (evt) => {
   const ESC_KEYCODE = 27;
   return evt.keyCode && evt.keyCode === ESC_KEYCODE;
 };
-export {getRandomBoolean, getRandomItemFrom, getRandomNumberInRange, renderComponent, createElement, unRenderComponent, isDeactivateEvent};
+export {getRandomBoolean, getRandomItemFrom, getRandomNumberInRange, renderComponent, createElement, unRenderComponent, isDeactivateEvent, getRandomArray};

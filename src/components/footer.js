@@ -12,6 +12,9 @@ export class Footer {
 
     return this._element;
   }
+  removeElement() {
+    this._element = null;
+  }
   createFooter({count}) {
     return `<p>${count} movies inside</p>`;
   }

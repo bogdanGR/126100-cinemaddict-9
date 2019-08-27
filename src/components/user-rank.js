@@ -12,6 +12,9 @@ export class UserRank {
 
     return this._element;
   }
+  removeElement() {
+    this._element = null;
+  }
   createUserProfileTemplate({count}) {
     return `<p class="profile__rating">${count}</p>`.trim();
   }

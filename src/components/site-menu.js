@@ -13,6 +13,9 @@ export class Menu {
 
     return this._element;
   }
+  removeElement() {
+    this._element = null;
+  }
   createMenuTemplate({title, count}) {
     return `<a href="#${title}" class="main-navigation__item">${title} <span class="main-navigation__item-count">${count}</span></a>`;
   }

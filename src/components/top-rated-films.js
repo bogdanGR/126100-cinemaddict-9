@@ -11,6 +11,9 @@ export class TopRatedFilms {
 
     return this._element;
   }
+  removeElement() {
+    this._element = null;
+  }
   getTemplate() {
     return `
           <section class="films-list--extra  films-list--left">
