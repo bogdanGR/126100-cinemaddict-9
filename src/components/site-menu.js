@@ -1,10 +1,11 @@
 import {createElement} from "../utils";
+import {AbstractComponent} from "./absctract-component";
 
-export class Menu {
+export class Menu extends AbstractComponent {
   constructor({title, count}) {
+    super();
     this._title = title;
     this._count = count;
-    this._element = null;
   }
   getElement(filters) {
     if (!this._element) {
@@ -12,9 +13,6 @@ export class Menu {
     }
 
     return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
   createMenuTemplate({title, count}) {
     return `<a href="#${title}" class="main-navigation__item">${title} <span class="main-navigation__item-count">${count}</span></a>`;
