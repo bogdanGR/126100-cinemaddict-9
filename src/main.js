@@ -2,6 +2,7 @@ import {Menu} from "./../src/components/site-menu.js";
 import {renderComponent, isDeactivateEvent} from "./utils";
 import {Button} from "./components/btn-show-more";
 import {Card} from "./components/film-card";
+import {NoFilms} from "./components/no-films";
 import {Popup} from "./components/popup";
 import {SearchBar} from "./components/search";
 import {UserRank} from "./components/user-rank";
@@ -19,7 +20,6 @@ const CARDS = getCards(CARD_NUM);
 
 const headerSite = document.querySelector(`.header`);
 const mainSite = document.querySelector(`.main`);
-
 
 const search = new SearchBar();
 const userRank = new UserRank(getFilterNum(CARDS));
@@ -63,16 +63,31 @@ const renderCards = (container, cardsTpl) => {
   card.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, openNodeHandler);
   card.getElement().querySelector(`.film-card__title`).addEventListener(`click`, openNodeHandler);
   card.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, openNodeHandler);
+  cardDetails.getElement().querySelector(`textarea`)
+    .addEventListener(`focus`, () => {
+      document.removeEventListener(`keydown`, closeByEscHandler);
+    });
+  cardDetails.getElement().querySelector(`textarea`)
+    .addEventListener(`blur`, () => {
+      document.addEventListener(`keydown`, closeByEscHandler);
+    });
   cardDetails.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, closeNodeHandler);
-
-  renderComponent(container, card.getElement(), `beforeend`);
+  if (CARD_NUM) {
+    renderComponent(container, card.getElement(), `beforeend`);
+  }
 };
-cardsMocks.forEach((cardTpl) => renderCards(filmContainer, cardTpl));
 
+if (CARD_NUM) {
+  cardsMocks.forEach((cardTpl) => renderCards(filmContainer, cardTpl));
 
-renderComponent(filmList, btnShowMore.getElement(), `beforeend`);
-renderComponent(filmsNode, topRatedFilms.getElement(), `beforeend`);
-renderComponent(filmsNode, mostCommentedFilms.getElement(), `beforeend`);
+  renderComponent(filmList, btnShowMore.getElement(), `beforeend`);
+  renderComponent(filmsNode, topRatedFilms.getElement(), `beforeend`);
+  renderComponent(filmsNode, mostCommentedFilms.getElement(), `beforeend`);
+} else {
+  const noFilms = new NoFilms();
+  renderComponent(filmContainer, noFilms.getElement(), `beforeend`);
+}
+
 
 const filmLeftContainer = document.querySelector(`.films-list--left .films-list__container`);
 const filmRightContainer = document.querySelector(`.films-list--right .films-list__container`);
