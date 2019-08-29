@@ -1,6 +1,8 @@
-import {createElement} from "../utils";
-export class Popup {
+import {AbstractComponent} from "./absctract-component";
+
+export class Popup extends AbstractComponent {
   constructor({title, poster, descriptions, genre, rating, year, isInWatchList, isWatched, isFavorite, durationMin, director, country, comment, authorOfComment, writer, actor, ageRestriction}) {
+    super();
     this._title = title;
     this._poster = poster;
     this._descriptions = descriptions;
@@ -18,16 +20,6 @@ export class Popup {
     this._comment = comment;
     this._authorOfComment = authorOfComment;
     this._ageRestiction = ageRestriction;
-    this._element = null;
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-  removeElement() {
     this._element = null;
   }
   getTemplate() {

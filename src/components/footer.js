@@ -1,19 +1,16 @@
+import {AbstractComponent} from "./absctract-component";
 import {createElement} from "../utils";
 
-export class Footer {
+export class Footer extends AbstractComponent {
   constructor({count}) {
+    super();
     this._count = count;
-    this._element = null;
   }
   getElement(filters) {
     if (!this._element) {
       this._element = createElement(this.getTemplate(filters));
     }
-
     return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
   createFooter({count}) {
     return `<p>${count} movies inside</p>`;

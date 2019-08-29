@@ -1,9 +1,10 @@
 import {createElement} from "../utils";
+import {AbstractComponent} from "./absctract-component";
 
-export class UserRank {
+export class UserRank extends AbstractComponent {
   constructor({count}) {
+    super();
     this._count = count;
-    this._element = null;
   }
   getElement(filters) {
     if (!this._element) {
@@ -11,9 +12,6 @@ export class UserRank {
     }
 
     return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
   createUserProfileTemplate({count}) {
     return `<p class="profile__rating">${count}</p>`.trim();
