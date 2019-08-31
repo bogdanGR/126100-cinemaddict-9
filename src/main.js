@@ -25,9 +25,14 @@ renderComponent(headerSite, search.getElement(), `beforeend`);
 renderComponent(headerSite, userRank.getElement(getFilterNum(CARDS)), `beforeend`);
 renderComponent(mainSite, menuFilters.getElement(getFilterNum(CARDS)), `beforeend`);
 renderComponent(mainSite, sortTpl.getElement(), `beforeend`);
+const films = document.querySelector(`.films`);
 renderComponent(mainSite, contentTpl.getElement(), `beforeend`);
-const controllerContent = new PageController(mainSite, getFilmCard);
+
+const cardTpl = new Array(5).fill(` `).map(getFilmCard);
+const filmsContainer = document.querySelector(`.films-list__container`);
+const controllerContent = new PageController(mainSite, cardTpl);
 controllerContent.init();
+
 renderComponent(mainSite, footerOfSite.getElement(getFilterNum(CARDS)), `beforeend`);
 
 
