@@ -16,61 +16,52 @@ export class PageController {
     this._cardData = cardData;
     this._films = new Films();
     this._filmsList = new FilmsList();
-    this._CARD_NUM = 0;
-    this._MAX_RENDER_CARDS = 5;
+    this._numberOfCards = 30;
     this._sort = new SortTemplate();
-    this._filmContainer = document.querySelector(`.films-list`);
   }
   init() {
-    const cardsMocks = new Array(this._MAX_RENDER_CARDS).fill(``).map(getFilmCard);
-    const cardToTopRated = new Array(2).fill(``).map(getFilmCard);
-    const cardToMostComm = new Array(2).fill(``).map(getFilmCard);
-
+    const NUM_OF_RENDERING_TO_CATEGORIES = 2;
+    const MAX_RENDER_CARDS = 5;
+    const getCardsToCategories = getCards(NUM_OF_RENDERING_TO_CATEGORIES);
     const btnShowMore = new Button();
     const topRatedFilms = new TopRatedFilms();
     const mostCommentedFilms = new MostCommented();
-    if (this._CARD_NUM) {
+    if (this._numberOfCards) {
+      const numCardsToRender = this._cardData.slice(0, MAX_RENDER_CARDS);
       renderComponent(this._container, this._films.getElement(), `beforeend`);
-      renderComponent(this._films.getElement(), this._filmsList.getElement(), `beforeend`);
-      renderComponent(this._filmContainer, btnShowMore.getElement(), `beforeend`);
+      const filmContainer = document.querySelector(`.films-list`);
+      renderComponent(filmContainer, this._filmsList.getElement(), `beforeend`);
+      renderComponent(filmContainer, btnShowMore.getElement(), `beforeend`);
       renderComponent(this._films.getElement(), topRatedFilms.getElement(), `beforeend`);
       renderComponent(this._films.getElement(), mostCommentedFilms.getElement(), `beforeend`);
-
-
-      const filmLeftContainer = document.querySelector(`.films-list--left .films-list__container`);
-      const filmRightContainer = document.querySelector(`.films-list--right .films-list__container`);
-      cardsMocks.forEach((cardTpl) => this._renderCards(this._filmsList.getElement(), cardTpl));
-      const CARDS = getCards(this._CARD_NUM);
+      numCardsToRender.forEach((cardTpl) => this._renderCard(this._filmsList.getElement(), cardTpl));
       const mainSite = document.querySelector(`.main`);
-      let cardsOnPage = this._MAX_RENDER_CARDS;
-      let leftCardToRender = CARDS.length - cardsOnPage;
+      let cardsOnPage = MAX_RENDER_CARDS;
+      let leftCardToRender = numCardsToRender.length - cardsOnPage;
       const loadMoreButton = mainSite.querySelector(`.films-list__show-more`);
 
-      const renderLeftCards = () => {
-        const cardsMocksMore = new Array(this._MAX_RENDER_CARDS).fill(``).map(getFilmCard);
-        cardsMocksMore.forEach((cardTpl) => this._renderCards(this._filmsList.getElement(), cardTpl));
-        cardsOnPage += this._MAX_RENDER_CARDS;
-        leftCardToRender = CARDS.length - cardsOnPage;
+      const onLoadMoreButtonClick = () => {
+        const cardsMocksMore = new Array(MAX_RENDER_CARDS).fill(``).map(getFilmCard);
+        cardsMocksMore.forEach((cardTpl) => this._renderCard(this._filmsList.getElement(), cardTpl));
+        cardsOnPage += MAX_RENDER_CARDS;
+        leftCardToRender = this._numberOfCards - cardsOnPage;
 
         if (leftCardToRender <= 0) {
           loadMoreButton.classList.add(`visually-hidden`);
           loadMoreButton.removeEventListener(`click`, onLoadMoreButtonClick);
         }
       };
-      const onLoadMoreButtonClick = () => {
-        renderLeftCards();
-      };
       loadMoreButton.addEventListener(`click`, onLoadMoreButtonClick);
-      cardToTopRated.forEach((card) => this._renderCards(filmLeftContainer, card));
-      cardToMostComm.forEach((card) => this._renderCards(filmRightContainer, card));
-
+      getCardsToCategories.forEach((card) => this._renderCard(topRatedFilms.getElement().querySelector(`.films-list--left .films-list__container`), card));
+      getCardsToCategories.forEach((card) => this._renderCard(mostCommentedFilms.getElement().querySelector(`.films-list--right .films-list__container`), card));
+      this._sort.getElement().addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
     } else {
       const noFilms = new NoFilms();
-      renderComponent(this._filmContainer, noFilms.getElement(), `beforeend`);
+      renderComponent(this._container, noFilms.getElement(), `beforeend`);
     }
-   // this._sort.getElement().querySelector(`.sort`).addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
+
   }
-  _renderCards(localContainer, cardsTpl) {
+  _renderCard(localContainer, cardsTpl) {
     const card = new Card(cardsTpl);
     const cardDetails = new Popup(cardsTpl);
 
@@ -99,32 +90,29 @@ export class PageController {
         document.addEventListener(`keydown`, closeByEscHandler);
       });
     cardDetails.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, closeNodeHandler);
-    if (this._CARD_NUM) {
+    if (this._numberOfCards) {
       renderComponent(localContainer, card.getElement(), `beforeend`);
     }
   }
-  // _onSortLinkClick(evt) {
-  //   console.log(`active`)
-  //   evt.preventDefault();
-  //   console.log(`NOT active`)
-  //   if (evt.target.tagName !== `A`) {
-  //     return;
-  //   }
-  //
-  //   this._taskList.getElement().innerHTML = ``;
-  //
-  //   switch (evt.target.dataset.sortType) {
-  //     case `date`:
-  //       const sortedByDateCards = this._cardData.slice().sort((a, b) => a.year - b.year);
-  //       sortedByDateCards.forEach((card) => this._renderCards(this._filmContainer, card));
-  //       break;
-  //     case `rating`:
-  //       const sortedByRating = this._cardData.slice().sort((a, b) => a.rating - b.rating);
-  //       sortedByRating.forEach((card) => this._renderCards(this._filmContainer, card));
-  //       break;
-  //     case `default`:
-  //       this._cardData.forEach((cardTpl) => this._renderCards(this._filmContainer, cardTpl));
-  //       break;
-  //   }
-  // }
+  _onSortLinkClick(evt) {
+    evt.preventDefault();
+    if (evt.target.tagName !== `A`) {
+      return;
+    }
+    this._filmsList.getElement().innerHTML = ``;
+
+    switch (evt.target.dataset.sortType) {
+      case `date`:
+        const sortedByDateCards = this._cardData.slice().sort((a, b) => a.year - b.year);
+        sortedByDateCards.forEach((card) => this._renderCard(this._filmsList.getElement(), card));
+        break;
+      case `rating`:
+        const sortedByRating = this._cardData.slice().sort((a, b) => a.rating - b.rating);
+        sortedByRating.forEach((card) => this._renderCard(this._filmsList.getElement(), card));
+        break;
+      case `default`:
+        this._cardData.forEach((cardTpl) => this._renderCard(this._filmsList.getElement(), cardTpl));
+        break;
+    }
+  }
 }

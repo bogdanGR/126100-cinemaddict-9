@@ -1,4 +1,4 @@
-import {getRandomBoolean, getRandomNumberInRange, getRandomItemFrom, getRandomArray} from "../utils";
+import {getRandomBoolean, getRandomNumberInRange, getRandomItemFromArray, getRandomArray} from "../utils";
 const MIN_YEAR = 1929;
 const MAX_YEAR = 2019;
 
@@ -122,8 +122,8 @@ const getRandomItems = (dataInsert) => {
   return dataInsert.slice(0, getRandomNumberInRange(MIN_NUM_OF_ITEMS, MAX_NUM_OF_ITEMS));
 };
 export const getFilmCard = () => ({
-  title: getRandomItemFrom(filmsTitles),
-  poster: getRandomItemFrom(posters),
+  title: getRandomItemFromArray(filmsTitles),
+  poster: getRandomItemFromArray(posters),
   descriptions: new Set(getRandomItems(descriptionArr)),
   genre: new Set(getRandomItems(genre)),
   rating: getRandomNumberInRange(MIN_RATING, MAX_RATING),
@@ -132,12 +132,12 @@ export const getFilmCard = () => ({
   isWatched: getRandomBoolean(),
   isFavorite: getRandomBoolean(),
   durationMin: getRandomNumberInRange(MIN_DURATION_MINUTES, MAX_DURATION_MINUTES),
-  director: getRandomItemFrom(directors),
+  director: getRandomItemFromArray(directors),
   writer: new Set(getRandomItems(writers)),
   actor: new Set(getRandomItems(actors)),
-  country: getRandomItemFrom(countries),
+  country: getRandomItemFromArray(countries),
   comment: new Set(getRandomArray(getRandomNumberInRange(MIN_NUM_OF_ITEMS, MAX_NUM_OF_ITEMS), filmComments)),
-  ageRestriction: getRandomItemFrom(ageRestrictions)
+  ageRestriction: getRandomItemFromArray(ageRestrictions)
 });
 export const getCards = (amoutOfCards) => {
   return new Array(amoutOfCards).fill(``).map(getFilmCard);

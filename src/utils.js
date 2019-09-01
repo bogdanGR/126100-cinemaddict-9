@@ -1,4 +1,4 @@
-const getRandomItemFrom = (array) => {
+const getRandomItemFromArray = (array) => {
   return array[Math.floor(Math.random() * array.length)];
 };
 const getRandomArray = (lengthOfItems, array) => {
@@ -43,4 +43,4 @@ const isDeactivateEvent = (evt) => {
   const ESC_KEYCODE = 27;
   return evt.keyCode && evt.keyCode === ESC_KEYCODE;
 };
-export {getRandomBoolean, getRandomItemFrom, getRandomNumberInRange, renderComponent, createElement, unRenderComponent, isDeactivateEvent, getRandomArray};
+export {getRandomBoolean, getRandomItemFromArray, getRandomNumberInRange, renderComponent, createElement, unRenderComponent, isDeactivateEvent, getRandomArray};
