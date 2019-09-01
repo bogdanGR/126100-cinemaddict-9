@@ -5,7 +5,7 @@ export class Button extends AbstractComponent {
     super();
   }
   getTemplate() {
-    return `<button class="films-list__show-more">Show more</button>`.trim();
+    return `<button class="films-list__show-more">Show more</button>`;
   }
 }
 

@@ -7,8 +7,8 @@ import {Button} from "./btn-show-more";
 import {TopRatedFilms} from "./top-rated-films";
 import {MostCommented} from "./most-commented-films";
 import {SortTemplate} from "./sort-filter";
-import {Films} from "./Films";
-import {FilmsList} from "./FilmsList";
+import {Films} from "./films";
+import {FilmsList} from "./filmsList";
 
 export class PageController {
   constructor(container, cardData) {
@@ -16,7 +16,7 @@ export class PageController {
     this._cardData = cardData;
     this._films = new Films();
     this._filmsList = new FilmsList();
-    this._CARD_NUM = 10;
+    this._CARD_NUM = 0;
     this._MAX_RENDER_CARDS = 5;
     this._sort = new SortTemplate();
     this._filmContainer = document.querySelector(`.films-list`);
