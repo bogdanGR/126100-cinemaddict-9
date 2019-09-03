@@ -23,8 +23,7 @@ export class Popup extends AbstractComponent {
     this._element = null;
   }
   getTemplate() {
-    return `
-          <section class="film-details">
+    return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="form-details__top-container">
       <div class="film-details__close">
@@ -156,7 +155,6 @@ export class Popup extends AbstractComponent {
       </section>
     </div>
   </form>
-</section>
-    `.trim();
+</section>`;
   }
 }

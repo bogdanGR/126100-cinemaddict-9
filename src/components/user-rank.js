@@ -17,11 +17,9 @@ export class UserRank extends AbstractComponent {
     return `<p class="profile__rating">${count}</p>`.trim();
   }
   getTemplate(filters) {
-    return `
-  <section class="header__profile profile">
-    ${filters.map((filter) => this.createUserProfileTemplate(filter)).slice(2, 3).join(``)}
-    <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-  </section>
-  `.trim();
+    return `<section class="header__profile profile">
+              ${filters.map((filter) => this.createUserProfileTemplate(filter)).slice(2, 3).join(``)}
+              <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
+            </section>`;
   }
 }

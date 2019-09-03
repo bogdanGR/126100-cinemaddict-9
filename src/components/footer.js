@@ -16,14 +16,12 @@ export class Footer extends AbstractComponent {
     return `<p>${count} movies inside</p>`;
   }
   getTemplate(filters) {
-    return `
-        <footer class="footer">
-          <section class="footer__logo logo logo--smaller">Cinemaddict</section>
-            <section class="footer__statistics">
-              ${filters.map((filter) => this.createFooter(filter)).slice(0, 1).join(``)}
-            </section>
-        </footer>
-  `.trim();
+    return `<footer class="footer">
+              <section class="footer__logo logo logo--smaller">Cinemaddict</section>
+              <section class="footer__statistics">
+                ${filters.map((filter) => this.createFooter(filter)).slice(0, 1).join(``)}
+              </section>
+            </footer>`;
   }
 }
 

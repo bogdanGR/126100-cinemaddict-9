@@ -18,12 +18,10 @@ export class Menu extends AbstractComponent {
     return `<a href="#${title}" class="main-navigation__item">${title} <span class="main-navigation__item-count">${count}</span></a>`;
   }
   getTemplate(filters) {
-    return `
-          <nav class="main-navigation"> 
-           <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-              ${filters.map((filter) => this.createMenuTemplate(filter)).slice(1, 4).join(``)}
-                  <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
-          </nav>
-  `.trim();
+    return `<nav class="main-navigation"> 
+               <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
+               ${filters.map((filter) => this.createMenuTemplate(filter)).slice(1, 4).join(``)}
+               <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
+            </nav>`;
   }
 }
