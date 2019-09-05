@@ -1,7 +1,7 @@
 import {getCards} from "./data";
 import {Card} from "./film-card";
 import {Popup} from "./popup";
-import {isDeactivateEvent, renderComponent} from "../utils";
+import {isDeactivateEvent, renderComponent, unRenderComponent} from "../utils";
 import {NoFilms} from "./no-films";
 import {Button} from "./btn-show-more";
 import {TopRatedFilms} from "./top-rated-films";
@@ -9,6 +9,7 @@ import {MostCommented} from "./most-commented-films";
 import {SortTemplate} from "./sort-filter";
 import {Films} from "./films";
 import {FilmsList} from "./filmsList";
+import {MovieController} from "./movie-controller";
 
 const NUM_OF_RENDERING_TO_CATEGORIES = 2;
 const MAX_RENDER_CARDS = 5;
@@ -26,6 +27,9 @@ export class PageController {
     this._mostCommentedFilms = new MostCommented();
     this._getCardsToCategories = getCards(NUM_OF_RENDERING_TO_CATEGORIES);
     this._numCardsToRender = this._cardData.slice(0, MAX_RENDER_CARDS);
+    this._subscriptions = [];
+    this._onChangeView = this._onChangeView.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
   }
   init() {
     const mainSite = document.querySelector(`.main`);
@@ -63,39 +67,6 @@ export class PageController {
   _getCountCurrentCards() {
     return this._container.querySelector(`.films-list__container`).querySelectorAll(`.film-card`).length;
   }
-  _renderCard(localContainer, cardsTpl) {
-    const card = new Card(cardsTpl);
-    const cardDetails = new Popup(cardsTpl);
-
-    const closeByEscHandler = (evt) => {
-      if (isDeactivateEvent(evt)) {
-        localContainer.replaceChild(card.getElement(), cardDetails.getElement());
-        document.removeEventListener(`keydown`, closeByEscHandler);
-      }
-    };
-    const openNodeHandler = () => {
-      localContainer.replaceChild(cardDetails.getElement(), card.getElement());
-      document.addEventListener(`keydown`, closeByEscHandler);
-    };
-    const closeNodeHandler = () => {
-      localContainer.replaceChild(card.getElement(), cardDetails.getElement());
-    };
-    card.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, openNodeHandler);
-    card.getElement().querySelector(`.film-card__title`).addEventListener(`click`, openNodeHandler);
-    card.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, openNodeHandler);
-    cardDetails.getElement().querySelector(`textarea`)
-      .addEventListener(`focus`, () => {
-        document.removeEventListener(`keydown`, closeByEscHandler);
-      });
-    cardDetails.getElement().querySelector(`textarea`)
-      .addEventListener(`blur`, () => {
-        document.addEventListener(`keydown`, closeByEscHandler);
-      });
-    cardDetails.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, closeNodeHandler);
-    if (this._numberOfCards) {
-      renderComponent(localContainer, card.getElement(), `beforeend`);
-    }
-  }
   _onSortLinkClick(evt) {
     evt.preventDefault();
     if (evt.target.tagName !== `A`) {
@@ -119,5 +90,23 @@ export class PageController {
         sortByDefault.forEach((cardTpl) => this._renderCard(this._filmsList.getElement(), cardTpl));
         break;
     }
+  }
+  _renderCard(card) {
+    const movieController = new MovieController(this._filmsList, card, this._onChangeView, this._onDataChange());
+    this._subscriptions.push(movieController.setDefaultView.bind(movieController));
+  }
+  _renderFilms(data) {
+    unRenderComponent(this._filmsList.getElement());
+    this._filmsList.removeElement();
+    renderComponent(this._films.getElement(), this._filmsList.getElement(), `beforeend`);
+    this._cardData.forEach((filmsMock) => this._renderCard(filmsMock));
+  }
+  _onDataChange(newData, oldData) {
+    this._cardData[this._cardData.findIndex((it2) => it2 === oldData)] = newData;
+
+    this._renderCard(this._cardData);
+  }
+  _onChangeView() {
+    this._subscriptions.forEach((it) => it());
   }
 }
