@@ -13,7 +13,6 @@ export class MovieController {
     this._card = new Card(this._data);
     this._moviePopup = new Popup(this._data);
     this._userRating = new UserRating();
-    this._numberOfCards = 30;
     this._onClickControlsCard();
   }
 
