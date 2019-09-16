@@ -1,7 +1,5 @@
 import {getCards} from "./data";
-import {Card} from "./film-card";
-import {Popup} from "./popup";
-import {isDeactivateEvent, renderComponent, unRenderComponent} from "../utils";
+import {renderComponent, unRenderComponent} from "../utils";
 import {NoFilms} from "./no-films";
 import {Button} from "./btn-show-more";
 import {TopRatedFilms} from "./top-rated-films";
@@ -27,6 +25,7 @@ export class PageController {
     this._mostCommentedFilms = new MostCommented();
     this._getCardsToCategories = getCards(NUM_OF_RENDERING_TO_CATEGORIES);
     this._numCardsToRender = this._cardData.slice(0, MAX_RENDER_CARDS);
+    this._sortedFilm = [];
     this._subscriptions = [];
     this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
@@ -39,15 +38,13 @@ export class PageController {
       const filmContainer = document.querySelector(`.films-list`);
       renderComponent(filmContainer, this._filmsList.getElement(), `beforeend`);
       renderComponent(filmContainer, this._btnShowMore.getElement(), `beforeend`);
-      renderComponent(this._films.getElement(), this._topRatedFilms.getElement(), `beforeend`);
-      renderComponent(this._films.getElement(), this._mostCommentedFilms.getElement(), `beforeend`);
-      this._numCardsToRender.forEach((cardTpl) => this._renderCard(this._filmsList.getElement(), cardTpl));
+      this._renderFilms(this._filmsList.getElement(), this._numCardsToRender);
       let cardsOnPage = MAX_RENDER_CARDS;
       let leftCardToRender = this._numCardsToRender.length - cardsOnPage;
       const loadMoreButton = document.querySelector(`.films-list__show-more`);
 
       const onLoadMoreButtonClick = () => {
-        this._numCardsToRender.forEach((cardTpl) => this._renderCard(this._filmsList.getElement(), cardTpl));
+        this._renderFilms(this._filmsList.getElement(), this._numCardsToRender);
         cardsOnPage += MAX_RENDER_CARDS;
         leftCardToRender = this._numberOfCards - cardsOnPage;
         if (leftCardToRender <= 0) {
@@ -56,13 +53,21 @@ export class PageController {
         }
       };
       loadMoreButton.addEventListener(`click`, onLoadMoreButtonClick);
-      this._getCardsToCategories.forEach((card) => this._renderCard(this._topRatedFilms.getElement().querySelector(`.films-list--left .films-list__container`), card));
-      this._getCardsToCategories.forEach((card) => this._renderCard(this._mostCommentedFilms.getElement().querySelector(`.films-list--right .films-list__container`), card));
+      this._renderFilms(this._topRatedFilms.getElement().querySelector(`.films-list--left .films-list__container`), this._getCardsToCategories);
+      this._renderFilms(this._mostCommentedFilms.getElement().querySelector(`.films-list--right .films-list__container`), this._getCardsToCategories);
     } else {
       const noFilms = new NoFilms();
       renderComponent(this._container, noFilms.getElement(), `beforeend`);
     }
     this._sort.getElement().addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
+  }
+  _renderBoard() {
+    const filmContainer = document.querySelector(`.films-list`);
+    unRenderComponent(this._filmsList.getElement());
+    this._filmsList.removeElement();
+    renderComponent(filmContainer, this._filmsList.getElement(), `beforeend`);
+    renderComponent(this._films.getElement(), this._topRatedFilms.getElement(), `beforeend`);
+    renderComponent(this._films.getElement(), this._mostCommentedFilms.getElement(), `beforeend`);
   }
   _getCountCurrentCards() {
     return this._container.querySelector(`.films-list__container`).querySelectorAll(`.film-card`).length;
@@ -78,33 +83,46 @@ export class PageController {
       case `date`:
         const sortFilmsByDate = this._cardData.slice().sort((a, b) => a.year - b.year);
         const sortedByDateCards = sortFilmsByDate.slice(0, countCurrentCards);
-        sortedByDateCards.forEach((card) => this._renderCard(this._filmsList.getElement(), card));
+        this._renderFilms(this._filmsList.getElement(), sortedByDateCards);
         break;
       case `rating`:
         const sortFilmsByRating = this._cardData.slice().sort((a, b) => a.rating - b.rating);
         const sortedByRating = sortFilmsByRating.slice(0, countCurrentCards);
-        sortedByRating.forEach((card) => this._renderCard(this._filmsList.getElement(), card));
+        this._renderFilms(this._filmsList.getElement(), sortedByRating);
         break;
       case `default`:
         const sortByDefault = this._cardData.slice(0, countCurrentCards);
-        sortByDefault.forEach((cardTpl) => this._renderCard(this._filmsList.getElement(), cardTpl));
+        this._renderFilms(this._filmsList.getElement(), sortByDefault);
         break;
     }
   }
-  _renderCard(card) {
-    const movieController = new MovieController(this._filmsList, card, this._onChangeView, this._onDataChange());
-    this._subscriptions.push(movieController.setDefaultView.bind(movieController));
-  }
-  _renderFilms(data) {
+
+  _renderFilms(container, data) {
     unRenderComponent(this._filmsList.getElement());
     this._filmsList.removeElement();
     renderComponent(this._films.getElement(), this._filmsList.getElement(), `beforeend`);
-    this._cardData.forEach((filmsMock) => this._renderCard(filmsMock));
+    container.innerHTML = ``;
+    data.forEach((filmsMock) => this._renderCard(container, filmsMock));
   }
-  _onDataChange(newData, oldData) {
-    this._cardData[this._cardData.findIndex((it2) => it2 === oldData)] = newData;
+  _renderCard(container, card) {
+    const movieController = new MovieController(container, card, this._onChangeView, this._onDataChange);
+    movieController.init();
 
-    this._renderCard(this._cardData);
+    this._subscriptions.push(movieController.setDefaultView.bind(movieController));
+  }
+  _onDataChange(newData, oldData, isNewComment = false) {
+    if (isNewComment) {
+      this._cardData[this._cardData.findIndex((it) => it === oldData)].comments.push(newData);
+    } else {
+      if (this._sortedFilm.length) {
+        this._sortedFilm[this._sortedFilm.findIndex((it) => it === oldData)].controls = newData.controls;
+        this._cardData[this._cardData.findIndex((it) => it === oldData)].controls = newData.controls;
+        this._renderBoard();
+      } else {
+        this._cardData[this._cardData.findIndex((it) => it === oldData)].controls = newData.controls;
+        this._renderBoard();
+      }
+    }
   }
   _onChangeView() {
     this._subscriptions.forEach((it) => it());

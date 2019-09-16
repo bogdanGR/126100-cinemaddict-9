@@ -43,4 +43,8 @@ const isDeactivateEvent = (evt) => {
   const ESC_KEYCODE = 27;
   return evt.keyCode && evt.keyCode === ESC_KEYCODE;
 };
-export {getRandomBoolean, getRandomItemFromArray, getRandomNumberInRange, renderComponent, createElement, unRenderComponent, isDeactivateEvent, getRandomArray};
+const isActivationEvent = (evt) => {
+  const ENTER_KEY_CODE = 13;
+  return evt.keyCode && evt.keyCode === ENTER_KEY_CODE;
+};
+export {getRandomBoolean, getRandomItemFromArray, getRandomNumberInRange, renderComponent, createElement, unRenderComponent, isDeactivateEvent, getRandomArray, isActivationEvent};

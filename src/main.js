@@ -8,7 +8,7 @@ import {PageController} from "./components/page-controller";
 
 const CARD_NUM = 30;
 const CARDS = getCards(CARD_NUM);
-
+//console.log(CARDS)
 const headerSite = document.querySelector(`.header`);
 const mainSite = document.querySelector(`.main`);
 
