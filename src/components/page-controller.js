@@ -62,12 +62,12 @@ export class PageController {
     this._sort.getElement().addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
   }
   _renderBoard() {
-    const filmContainer = document.querySelector(`.films-list`);
     unRenderComponent(this._filmsList.getElement());
     this._filmsList.removeElement();
-    renderComponent(filmContainer, this._filmsList.getElement(), `beforeend`);
+    renderComponent(this._films.getElement().querySelector(`.films-list`), this._filmsList.getElement(), `beforeend`);
     renderComponent(this._films.getElement(), this._topRatedFilms.getElement(), `beforeend`);
     renderComponent(this._films.getElement(), this._mostCommentedFilms.getElement(), `beforeend`);
+    this._renderFilms(this._filmsList.getElement(), this._numCardsToRender);
   }
   _getCountCurrentCards() {
     return this._container.querySelector(`.films-list__container`).querySelectorAll(`.film-card`).length;
@@ -100,14 +100,13 @@ export class PageController {
   _renderFilms(container, data) {
     unRenderComponent(this._filmsList.getElement());
     this._filmsList.removeElement();
-    renderComponent(this._films.getElement(), this._filmsList.getElement(), `beforeend`);
+    renderComponent(this._films.getElement().querySelector(`.films-list`), this._filmsList.getElement(), `beforeend`);
     container.innerHTML = ``;
     data.forEach((filmsMock) => this._renderCard(container, filmsMock));
   }
   _renderCard(container, card) {
     const movieController = new MovieController(container, card, this._onChangeView, this._onDataChange);
     movieController.init();
-
     this._subscriptions.push(movieController.setDefaultView.bind(movieController));
   }
   _onDataChange(newData, oldData, isNewComment = false) {
