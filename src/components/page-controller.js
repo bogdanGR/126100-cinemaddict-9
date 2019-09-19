@@ -31,30 +31,10 @@ export class PageController {
     this._onDataChange = this._onDataChange.bind(this);
   }
   init() {
-    const mainSite = document.querySelector(`.main`);
     if (this._numberOfCards) {
-      renderComponent(mainSite, this._sort.getElement(), `beforeend`);
+      renderComponent(this._container, this._sort.getElement(), `beforeend`);
       renderComponent(this._container, this._films.getElement(), `beforeend`);
-      const filmContainer = document.querySelector(`.films-list`);
-      renderComponent(filmContainer, this._filmsList.getElement(), `beforeend`);
-      renderComponent(filmContainer, this._btnShowMore.getElement(), `beforeend`);
-      this._renderFilms(this._filmsList.getElement(), this._numCardsToRender);
-      let cardsOnPage = MAX_RENDER_CARDS;
-      let leftCardToRender = this._numCardsToRender.length - cardsOnPage;
-      const loadMoreButton = document.querySelector(`.films-list__show-more`);
-
-      const onLoadMoreButtonClick = () => {
-        this._renderFilms(this._filmsList.getElement(), this._numCardsToRender);
-        cardsOnPage += MAX_RENDER_CARDS;
-        leftCardToRender = this._numberOfCards - cardsOnPage;
-        if (leftCardToRender <= 0) {
-          loadMoreButton.classList.add(`visually-hidden`);
-          loadMoreButton.removeEventListener(`click`, onLoadMoreButtonClick);
-        }
-      };
-      loadMoreButton.addEventListener(`click`, onLoadMoreButtonClick);
-      this._renderFilms(this._topRatedFilms.getElement().querySelector(`.films-list--left .films-list__container`), this._getCardsToCategories);
-      this._renderFilms(this._mostCommentedFilms.getElement().querySelector(`.films-list--right .films-list__container`), this._getCardsToCategories);
+      this._renderBoard();
     } else {
       const noFilms = new NoFilms();
       renderComponent(this._container, noFilms.getElement(), `beforeend`);
@@ -65,12 +45,58 @@ export class PageController {
     unRenderComponent(this._filmsList.getElement());
     this._filmsList.removeElement();
     renderComponent(this._films.getElement().querySelector(`.films-list`), this._filmsList.getElement(), `beforeend`);
+    renderComponent(this._films.getElement().querySelector(`.films-list`), this._btnShowMore.getElement(), `beforeend`);
     renderComponent(this._films.getElement(), this._topRatedFilms.getElement(), `beforeend`);
     renderComponent(this._films.getElement(), this._mostCommentedFilms.getElement(), `beforeend`);
+
     this._renderFilms(this._filmsList.getElement(), this._numCardsToRender);
+    this._renderFilms(this._topRatedFilms.getElement().querySelector(`.films-list--left .films-list__container`), this._getCardsToCategories);
+    this._renderFilms(this._mostCommentedFilms.getElement().querySelector(`.films-list--right .films-list__container`), this._getCardsToCategories);
+
+    let cardsOnPage = MAX_RENDER_CARDS;
+    let leftCardToRender = this._numCardsToRender.length - cardsOnPage;
+    const loadMoreButton = document.querySelector(`.films-list__show-more`);
+
+    const onLoadMoreButtonClick = () => {
+      this._renderFilms(this._filmsList.getElement(), this._numCardsToRender);
+      cardsOnPage += MAX_RENDER_CARDS;
+      leftCardToRender = this._numberOfCards - cardsOnPage;
+      if (leftCardToRender <= 0) {
+        loadMoreButton.classList.add(`visually-hidden`);
+        loadMoreButton.removeEventListener(`click`, onLoadMoreButtonClick);
+      }
+    };
+    loadMoreButton.addEventListener(`click`, onLoadMoreButtonClick);
   }
   _getCountCurrentCards() {
     return this._container.querySelector(`.films-list__container`).querySelectorAll(`.film-card`).length;
+  }
+
+  _renderFilms(container, data) {
+    container.innerHTML = ``;
+    data.forEach((filmsMock) => this._renderCard(container, filmsMock));
+  }
+  _renderCard(container, card) {
+    const movieController = new MovieController(container, card, this._onChangeView, this._onDataChange);
+    movieController.init();
+    this._subscriptions.push(movieController.setDefaultView.bind(movieController));
+  }
+  _onChangeView() {
+    this._subscriptions.forEach((it) => it());
+  }
+  _onDataChange(newData, oldData, isNewComment = false) {
+    if (isNewComment) {
+      this._cardData[this._cardData.findIndex((it) => it === oldData)].comment.push(newData);
+    } else {
+      if (this._sortedFilm.length) {
+        this._sortedFilm[this._sortedFilm.findIndex((it) => it === oldData)].controls = newData.controls;
+        this._cardData[this._cardData.findIndex((it) => it === oldData)].controls = newData.controls;
+        this._renderBoard();
+      } else {
+        this._cardData[this._cardData.findIndex((it) => it === oldData)].controls = newData.controls;
+        this._renderBoard();
+      }
+    }
   }
   _onSortLinkClick(evt) {
     evt.preventDefault();
@@ -95,35 +121,5 @@ export class PageController {
         this._renderFilms(this._filmsList.getElement(), sortByDefault);
         break;
     }
-  }
-
-  _renderFilms(container, data) {
-    unRenderComponent(this._filmsList.getElement());
-    this._filmsList.removeElement();
-    renderComponent(this._films.getElement().querySelector(`.films-list`), this._filmsList.getElement(), `beforeend`);
-    container.innerHTML = ``;
-    data.forEach((filmsMock) => this._renderCard(container, filmsMock));
-  }
-  _renderCard(container, card) {
-    const movieController = new MovieController(container, card, this._onChangeView, this._onDataChange);
-    movieController.init();
-    this._subscriptions.push(movieController.setDefaultView.bind(movieController));
-  }
-  _onDataChange(newData, oldData, isNewComment = false) {
-    if (isNewComment) {
-      this._cardData[this._cardData.findIndex((it) => it === oldData)].comments.push(newData);
-    } else {
-      if (this._sortedFilm.length) {
-        this._sortedFilm[this._sortedFilm.findIndex((it) => it === oldData)].controls = newData.controls;
-        this._cardData[this._cardData.findIndex((it) => it === oldData)].controls = newData.controls;
-        this._renderBoard();
-      } else {
-        this._cardData[this._cardData.findIndex((it) => it === oldData)].controls = newData.controls;
-        this._renderBoard();
-      }
-    }
-  }
-  _onChangeView() {
-    this._subscriptions.forEach((it) => it());
   }
 }

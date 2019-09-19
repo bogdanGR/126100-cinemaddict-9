@@ -128,9 +128,11 @@ export const getFilmCard = () => ({
   genre: new Set(getRandomItems(genre)),
   rating: getRandomNumberInRange(MIN_RATING, MAX_RATING),
   year: getRandomNumberInRange(MIN_YEAR, MAX_YEAR),
-  isInWatchList: getRandomBoolean(),
-  isWatched: getRandomBoolean(),
-  isFavorite: getRandomBoolean(),
+  controls: {
+    isInWatchList: getRandomBoolean(),
+    isWatched: getRandomBoolean(),
+    isFavorite: getRandomBoolean()
+  },
   durationMin: getRandomNumberInRange(MIN_DURATION_MINUTES, MAX_DURATION_MINUTES),
   director: getRandomItemFromArray(directors),
   writer: new Set(getRandomItems(writers)),
@@ -150,9 +152,9 @@ export const getFilterNum = (filmCard) => {
     Favorites: 0
   };
   filmCard.forEach((card) => {
-    counts.Watchlist = card.isInWatchList ? counts.Watchlist += 1 : counts.Watchlist;
-    counts.History = card.isWatched ? counts.History += 1 : counts.History;
-    counts.Favorites = card.isFavorite ? counts.Favorites += 1 : counts.Favorites;
+    counts.Watchlist = card.controls.isInWatchList ? counts.Watchlist += 1 : counts.Watchlist;
+    counts.History = card.controls.isWatched ? counts.History += 1 : counts.History;
+    counts.Favorites = card.controls.isFavorite ? counts.Favorites += 1 : counts.Favorites;
   });
   const resultFilters = [];
 

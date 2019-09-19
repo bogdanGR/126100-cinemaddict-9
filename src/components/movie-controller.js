@@ -12,7 +12,7 @@ export class MovieController {
     this._onDataChange = onDataChange;
     this._card = new Card(this._data);
     this._moviePopup = new Popup(this._data);
-    this._userRating = new UserRating();
+    this._userRating = new UserRating(this._data);
     this._onClickControlsCard();
   }
 
@@ -25,7 +25,7 @@ export class MovieController {
     cardPoster.addEventListener(`click`, this._renderPopup.bind(this, MovieController));
     cardTitle.addEventListener(`click`, this._renderPopup.bind(this, MovieController));
     cardComments.addEventListener(`click`, this._renderPopup.bind(this, MovieController));
-    renderComponent(this._container, cardElement);
+    renderComponent(this._container, cardElement, `beforeend`);
   }
 
   _renderPopup() {
@@ -35,13 +35,13 @@ export class MovieController {
     const footerElement = document.querySelector(`footer`);
     renderComponent(footerElement, popupElement, `afterend`);
 
-    if (this._getStateOfControl().controls.isMarkedAsWatched) {
+    if (this._getStateOfControl().controls.isWatched) {
       this._renderUserRating();
     }
 
     const commentsContainer = popupElement.querySelector(`.film-details__comments-list`);
-    this._data.comments.forEach((comment) => {
-      renderComponent(commentsContainer, new Comment(comment).getElement());
+    this._data.comment.forEach((comment) => {
+      renderComponent(commentsContainer, new Comment(comment).getElement(), `beforeend`);
     });
 
     popupElement.querySelectorAll(`.film-details__emoji-label`).forEach((elem) => {
@@ -92,13 +92,16 @@ export class MovieController {
     this._userRating.removeElement();
 
     renderComponent(this._moviePopup.getElement().querySelector(`.form-details__top-container`), this._userRating.getElement(), `afterend`);
+    this._renderUserRating.getElement().querySelector(`.film-details__user-rating-score`).addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+    });
   }
 
   _getStateOfControl() {
     return {
       controls: {
-        isAddedToWatchlist: this._data.controls.isAddedToWatchlist,
-        isMarkedAsWatched: this._data.controls.isMarkedAsWatched,
+        isInWatchList: this._data.controls.isInWatchList,
+        isWatched: this._data.controls.isWatched,
         isFavorite: this._data.controls.isFavorite
       }
     };
@@ -180,7 +183,7 @@ export class MovieController {
         smile: smileImg,
       };
 
-      renderComponent(commentsList, new Comment(commentData).getElement());
+      renderComponent(commentsList, new Comment(commentData).getElement(), `beforeend`);
 
       commentTextarea.value = ``;
       const isNewComment = true;
