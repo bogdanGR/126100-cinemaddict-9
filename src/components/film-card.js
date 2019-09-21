@@ -1,6 +1,6 @@
 import {AbstractComponent} from "./absctract-component";
 export class Card extends AbstractComponent {
-  constructor({title, poster, descriptions, genre, rating, year,controls, durationMin, comment}) {
+  constructor({title, poster, descriptions, genre, rating, year, controls, durationMin, comment}) {
     super();
     this._title = title;
     this._poster = poster;
@@ -23,7 +23,7 @@ export class Card extends AbstractComponent {
               </p>
               <img src="./images/posters/${this._poster}" alt="" class="film-card__poster">
               <p class="film-card__description">${Array.from(this._descriptions).map((descr) => descr).join(``)}</p>
-              <a class="film-card__comments">${this._comment.size} comments</a>
+              <a class="film-card__comments">${this._comment.length} comments</a>
               <form class="film-card__controls">
                 <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${this._controls.isInWatchList ? `film-card__controls-item--active"` : ``}">Add to watchlist</button>
                 <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${this._controls.isWatched ? `film-card__controls-item--active"` : ``}">Mark as watched</button>

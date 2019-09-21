@@ -40,8 +40,8 @@ export class MovieController {
     }
 
     const commentsContainer = popupElement.querySelector(`.film-details__comments-list`);
-    this._data.comment.forEach((comment) => {
-      renderComponent(commentsContainer, new Comment(comment).getElement(), `beforeend`);
+    this._data.comment.forEach((commentItem) => {
+      renderComponent(commentsContainer, new Comment(commentItem).getElement(), `beforeend`);
     });
 
     popupElement.querySelectorAll(`.film-details__emoji-label`).forEach((elem) => {
@@ -92,7 +92,7 @@ export class MovieController {
     this._userRating.removeElement();
 
     renderComponent(this._moviePopup.getElement().querySelector(`.form-details__top-container`), this._userRating.getElement(), `afterend`);
-    this._renderUserRating.getElement().querySelector(`.film-details__user-rating-score`).addEventListener(`click`, (evt) => {
+    this._userRating.getElement().querySelector(`.film-details__user-rating-score`).addEventListener(`click`, (evt) => {
       evt.preventDefault();
     });
   }

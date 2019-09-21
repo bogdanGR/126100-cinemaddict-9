@@ -68,18 +68,17 @@ export class PageController {
     };
     loadMoreButton.addEventListener(`click`, onLoadMoreButtonClick);
   }
-  _getCountCurrentCards() {
-    return this._container.querySelector(`.films-list__container`).querySelectorAll(`.film-card`).length;
-  }
-
   _renderFilms(container, data) {
     container.innerHTML = ``;
     data.forEach((filmsMock) => this._renderCard(container, filmsMock));
   }
   _renderCard(container, card) {
-    const movieController = new MovieController(container, card, this._onChangeView, this._onDataChange);
+    const movieController = new MovieController(container, card, this._onDataChange, this._onChangeView);
     movieController.init();
     this._subscriptions.push(movieController.setDefaultView.bind(movieController));
+  }
+  _getCountCurrentCards() {
+    return this._container.querySelector(`.films-list__container`).querySelectorAll(`.film-card`).length;
   }
   _onChangeView() {
     this._subscriptions.forEach((it) => it());

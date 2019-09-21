@@ -1,9 +1,9 @@
 import {AbstractComponent} from "./absctract-component";
 
 export class Comment extends AbstractComponent {
-  constructor({smile, text, author, date}) {
+  constructor({img, text, author, date}) {
     super();
-    this._smile = smile;
+    this._img = img;
     this._text = text;
     this._author = author;
     this._date = date;
@@ -13,7 +13,7 @@ export class Comment extends AbstractComponent {
     return `
       <li class="film-details__comment">
         <span class="film-details__comment-emoji">
-          <img src="./images/emoji/${this._smile}" width="55" height="55" alt="emoji">
+          <img src="./images/emoji/${this._img}" width="55" height="55" alt="emoji">
         </span>
         <div>
           <p class="film-details__comment-text">${this._text}</p>

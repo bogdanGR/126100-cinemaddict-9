@@ -1,4 +1,4 @@
-import {getRandomBoolean, getRandomNumberInRange, getRandomItemFromArray, getRandomArray} from "../utils";
+import {getRandomBoolean, getRandomNumberInRange, getRandomItemFromArray} from "../utils";
 const MIN_YEAR = 1929;
 const MAX_YEAR = 2019;
 
@@ -84,19 +84,19 @@ const countries = [
 ];
 const filmComments = [
   {
-    img: `images/emoji/smile.png`,
+    img: `smile.png`,
     text: `Interesting setting and a good cast`,
     author: `Tim Macoveev`,
     date: 1
   },
   {
-    img: `images/emoji/sleeping.png`,
+    img: `sleeping.png`,
     text: `Booooooooooring`,
     author: `John Doe`,
     date: 2
   },
   {
-    img: `images/emoji/puke.png`,
+    img: `puke.png`,
     text: `Almost two hours? Seriously?`,
     author: `John Doe`,
     date: 4
@@ -138,7 +138,8 @@ export const getFilmCard = () => ({
   writer: new Set(getRandomItems(writers)),
   actor: new Set(getRandomItems(actors)),
   country: getRandomItemFromArray(countries),
-  comment: new Set(getRandomArray(getRandomNumberInRange(MIN_NUM_OF_ITEMS, MAX_NUM_OF_ITEMS), filmComments)),
+  // comment: new Set(getRandomArray(getRandomNumberInRange(MIN_NUM_OF_ITEMS, MAX_NUM_OF_ITEMS), filmComments)),
+  comment: filmComments,
   ageRestriction: getRandomItemFromArray(ageRestrictions)
 });
 export const getCards = (amoutOfCards) => {
