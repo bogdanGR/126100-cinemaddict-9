@@ -33,7 +33,7 @@ export class MovieController {
 
     const popupElement = this._moviePopup.getElement();
     const footerElement = document.querySelector(`footer`);
-    renderComponent(footerElement, popupElement, `afterend`);
+    renderComponent(footerElement, popupElement, `beforeend`);
 
     if (this._getStateOfControl().controls.isWatched) {
       this._renderUserRating();
@@ -91,7 +91,7 @@ export class MovieController {
     unRenderComponent(this._userRating.getElement());
     this._userRating.removeElement();
 
-    renderComponent(this._moviePopup.getElement().querySelector(`.form-details__top-container`), this._userRating.getElement(), `afterend`);
+    renderComponent(this._moviePopup.getElement().querySelector(`.form-details__top-container`), this._userRating.getElement(), `beforeend`);
     this._userRating.getElement().querySelector(`.film-details__user-rating-score`).addEventListener(`click`, (evt) => {
       evt.preventDefault();
     });
@@ -116,12 +116,12 @@ export class MovieController {
 
       if (evt.target.classList.contains(`film-card__controls-item--add-to-watchlist`)) {
         cardElement.querySelector(`.film-card__controls-item--add-to-watchlist`).classList.toggle(`film-card__controls-item--active`);
-        entry.controls.isAddedToWatchlist = !entry.controls.isAddedToWatchlist;
+        entry.controls.isInWatchList = !entry.controls.isInWatchList;
       }
 
       if (evt.target.classList.contains(`film-card__controls-item--mark-as-watched`)) {
         cardElement.querySelector(`.film-card__controls-item--mark-as-watched`).classList.toggle(`film-card__controls-item--active`);
-        entry.controls.isMarkedAsWatched = !entry.controls.isMarkedAsWatched;
+        entry.controls.isWatched = !entry.controls.isWatched;
       }
 
       if (evt.target.classList.contains(`film-card__controls-item--favorite`)) {
@@ -141,24 +141,31 @@ export class MovieController {
   }
 
   _onClickControlsInPopup(evt) {
+    const populElement = this._moviePopup.getElement();
     evt.preventDefault();
     const entry = this._getStateOfControl();
 
     if (evt.target.classList.contains(`film-details__control-label--watchlist`)) {
-      this._moviePopup.getElement().querySelector(`#watchlist`).checked = !this._moviePopup.getElement().querySelector(`#watchlist`).checked;
-      entry.controls.isAddedToWatchlist = !entry.controls.isAddedToWatchlist;
+      populElement.querySelector(`#watchlist`).checked = !this._moviePopup.getElement().querySelector(`#watchlist`).checked;
+      entry.controls.isInWatchList = !entry.controls.isInWatchList;
     }
 
     if (evt.target.classList.contains(`film-details__control-label--watched`)) {
-      this._moviePopup.getElement().querySelector(`#watched`).checked = !this._moviePopup.getElement().querySelector(`#watched`).checked;
-      entry.controls.isMarkedAsWatched = !entry.controls.isMarkedAsWatched;
+      populElement.querySelector(`#watched`).checked = !this._moviePopup.getElement().querySelector(`#watched`).checked;
+      entry.controls.isWatched = !entry.controls.isWatched;
+
+      if (populElement.querySelector(`#watched`).checked) {
+        this._renderUserRating();
+      } else {
+        unRenderComponent(this._userRating.getElement());
+        this._userRating.removeElement();
+      }
     }
 
     if (evt.target.classList.contains(`film-details__control-label--favorite`)) {
-      this._moviePopup.getElement().querySelector(`#favorite`).checked = !this._moviePopup.getElement().querySelector(`#favorite`).checked;
+      populElement.querySelector(`#favorite`).checked = !this._moviePopup.getElement().querySelector(`#favorite`).checked;
       entry.controls.isFavorite = !entry.controls.isFavorite;
     }
-
     this._onDataChange(entry, this._data);
   }
 
@@ -177,10 +184,10 @@ export class MovieController {
       }
 
       const commentData = {
+        img: smileImg,
         author: `Unknown`,
         text: commentTextarea.value,
-        date: new Date(Date.now()),
-        smile: smileImg,
+        date: new Date(Date.now())
       };
 
       renderComponent(commentsList, new Comment(commentData).getElement(), `beforeend`);
