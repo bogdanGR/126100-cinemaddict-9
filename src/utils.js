@@ -47,4 +47,5 @@ const isActivationEvent = (evt) => {
   const ENTER_KEY_CODE = 13;
   return evt.keyCode && evt.keyCode === ENTER_KEY_CODE;
 };
-export {getRandomBoolean, getRandomItemFromArray, getRandomNumberInRange, renderComponent, createElement, unRenderComponent, isDeactivateEvent, getRandomArray, isActivationEvent};
+const getRandomDate = (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+export {getRandomBoolean, getRandomItemFromArray, getRandomNumberInRange, renderComponent, createElement, unRenderComponent, isDeactivateEvent, getRandomArray, isActivationEvent, getRandomDate};
