@@ -42,6 +42,15 @@ export class PageController {
     }
     this._sort.getElement().addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
   }
+  _showContent() {
+    this.init();
+  }
+  _hideContent() {
+    unRenderComponent(this._sort.getElement());
+    unRenderComponent(this._films.getElement());
+    this._sort.removeElement();
+    this._films.removeElement();
+  }
   _renderBoard() {
     unRenderComponent(this._filmsList.getElement());
     this._filmsList.removeElement();
