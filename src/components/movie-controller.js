@@ -3,6 +3,7 @@ import {Popup} from "./popup";
 import {isDeactivateEvent, renderComponent, unRenderComponent, isActivationEvent, createElement} from "../utils";
 import {Comment} from "./comment";
 import {UserRating} from "./user-rating";
+import moment from "moment";
 
 export class MovieController {
   constructor(container, data, onDataChange, onChangeView) {
@@ -187,7 +188,7 @@ export class MovieController {
         img: smileImg,
         author: `Unknown`,
         text: commentTextarea.value,
-        date: new Date(Date.now())
+        date: moment()
       };
 
       renderComponent(commentsList, new Comment(commentData).getElement(), `beforeend`);

@@ -1,6 +1,6 @@
-import {getRandomBoolean, getRandomNumberInRange, getRandomItemFromArray} from "../utils";
-const MIN_YEAR = 1929;
-const MAX_YEAR = 2019;
+import {getRandomBoolean, getRandomNumberInRange, getRandomItemFromArray, getRandomDate} from "../utils";
+import moment from "moment";
+const MIN_YEAR = `1929-01-01`;
 
 const MIN_RATING = 1;
 const MAX_RATING = 10;
@@ -87,19 +87,22 @@ const filmComments = [
     img: `smile.png`,
     text: `Interesting setting and a good cast`,
     author: `Tim Macoveev`,
-    date: 1
+    date: `${moment(getRandomDate(new Date(MIN_YEAR), new Date()))
+      .fromNow()}`
   },
   {
     img: `sleeping.png`,
     text: `Booooooooooring`,
     author: `John Doe`,
-    date: 2
+    date: `${moment(getRandomDate(new Date(MIN_YEAR), new Date()))
+      .fromNow()}`
   },
   {
     img: `puke.png`,
     text: `Almost two hours? Seriously?`,
     author: `John Doe`,
-    date: 4
+    date: `${moment(getRandomDate(new Date(MIN_YEAR), new Date()))
+      .fromNow()}`
   }
 ];
 const ageRestrictions = [
@@ -127,7 +130,8 @@ export const getFilmCard = () => ({
   descriptions: new Set(getRandomItems(descriptionArr)),
   genre: new Set(getRandomItems(genre)),
   rating: getRandomNumberInRange(MIN_RATING, MAX_RATING),
-  year: getRandomNumberInRange(MIN_YEAR, MAX_YEAR),
+  year: `${moment(getRandomDate(new Date(MIN_YEAR), new Date()))
+    .format(`DD MMMM YYYY`)}`,
   controls: {
     isInWatchList: getRandomBoolean(),
     isWatched: getRandomBoolean(),
