@@ -2,9 +2,9 @@ import {Menu} from "./../src/components/site-menu.js";
 import {renderComponent} from "./utils";
 import {SearchBar} from "./components/search";
 import {UserRank} from "./components/user-rank";
-import {getFilterNum, getCards} from "./components/data";
+import {getFilterNum, getCards} from "./data/data";
 import {Footer} from "./components/footer";
-import {PageController} from "./components/page-controller";
+import {PageController} from "./controllers/page-controller";
 import {Statistic} from "./components/statistic";
 
 const CARD_NUM = 30;

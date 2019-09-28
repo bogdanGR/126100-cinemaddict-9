@@ -1,8 +1,8 @@
-import {Card} from "./film-card";
-import {Popup} from "./popup";
+import {Card} from "../components/film-card";
+import {Popup} from "../components/popup";
 import {isDeactivateEvent, renderComponent, unRenderComponent, isActivationEvent, createElement} from "../utils";
-import {Comment} from "./comment";
-import {UserRating} from "./user-rating";
+import {Comment} from "../components/comment";
+import {UserRating} from "../components/user-rating";
 import moment from "moment";
 
 export class MovieController {
@@ -62,6 +62,10 @@ export class MovieController {
       }
     };
 
+    const onClickDelete = () => {
+      this._onDataChange(null, this._data);
+    };
+
     document.addEventListener(`keydown`, onEscKeyDown);
 
     popupElement.querySelector(`.film-details__controls`)
@@ -86,6 +90,8 @@ export class MovieController {
       .addEventListener(`blur`, () => {
         document.addEventListener(`keydown`, onEscKeyDown);
       });
+    popupElement.querySelector(`.film-details__comment-delete`)
+      .addEventListener(`click`, onClickDelete);
   }
 
   _renderUserRating() {
@@ -188,7 +194,7 @@ export class MovieController {
         img: smileImg,
         author: `Unknown`,
         text: commentTextarea.value,
-        date: moment()
+        date: moment().fromNow()
       };
 
       renderComponent(commentsList, new Comment(commentData).getElement(), `beforeend`);
