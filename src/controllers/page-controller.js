@@ -1,12 +1,12 @@
-import {getCards} from "./data";
+import {getCards} from "../data/data";
 import {renderComponent, unRenderComponent} from "../utils";
-import {NoFilms} from "./no-films";
-import {Button} from "./btn-show-more";
-import {TopRatedFilms} from "./top-rated-films";
-import {MostCommented} from "./most-commented-films";
-import {SortTemplate} from "./sort-filter";
-import {Films} from "./films";
-import {FilmsList} from "./filmsList";
+import {NoFilms} from "../components/no-films";
+import {Button} from "../components/btn-show-more";
+import {TopRatedFilms} from "../components/top-rated-films";
+import {MostCommented} from "../components/most-commented-films";
+import {SortTemplate} from "../components/sort-filter";
+import {Films} from "../components/films";
+import {FilmsList} from "../components/filmsList";
 import {MovieController} from "./movie-controller";
 
 const NUM_OF_RENDERING_TO_CATEGORIES = 2;
@@ -41,6 +41,15 @@ export class PageController {
       renderComponent(this._container, noFilms.getElement(), `beforeend`);
     }
     this._sort.getElement().addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
+  }
+  _showContent() {
+    this.init();
+  }
+  _hideContent() {
+    unRenderComponent(this._sort.getElement());
+    unRenderComponent(this._films.getElement());
+    this._sort.removeElement();
+    this._films.removeElement();
   }
   _renderBoard() {
     unRenderComponent(this._filmsList.getElement());
@@ -92,6 +101,9 @@ export class PageController {
     this._subscriptions.forEach((it) => it());
   }
   _onDataChange(newData, oldData, isNewComment = false) {
+    // if(newData === null) {
+    //
+    // }
     if (isNewComment) {
       this._cardData[this._cardData.findIndex((it) => it === oldData)].comment.push(newData);
     } else {

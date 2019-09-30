@@ -14,7 +14,8 @@ const getRandomNumberInRange = (min, max) => {
 };
 const position = {
   AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
+  BEFOREEND: `beforeend`,
+  AFTEREND: `afterend`
 };
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
@@ -30,6 +31,9 @@ const renderComponent = (container, element, place) => {
       break;
     case position.BEFOREEND:
       container.append(element);
+      break;
+    case position.AFTEREND:
+      container.after(element);
       break;
   }
 };
